@@ -4,3 +4,6 @@ In this repo, you will find all you need to reproduce the slides of my introduct
 Just open the Rmd file and Knit it :smiley:
 
 Alternatively, I also provide the pdf (which I built using the awesome `xaringan::decktape()` function).
+
+This is work in progress. I need to pick a language, French or English, and also to find an example in ecology to be used throughout the presentation.
+
