@@ -401,7 +401,8 @@ knitr::include_graphics("ggplot2_logo.jpg")
 ```{r message=FALSE, warning=FALSE, paged.print=FALSE, fig.height = 5, fig.width = 5, fig.align = "center"}
 iris %>% 
   ggplot() + 
-  geom_point(aes(x = Sepal.Length, y = Petal.Length))
+  aes(x = Sepal.Length, y = Petal.Length) +
+  geom_point()
 ```
 
 ---
@@ -410,8 +411,9 @@ iris %>%
 
 ```{r message=FALSE, warning=FALSE, paged.print=FALSE, fig.height = 4, fig.width = 4, fig.align = "center", eval=FALSE}
 iris %>%  #<<
-  ggplot() + 
-  geom_point(aes(x = Sepal.Length, y = Petal.Length))
+  ggplot() + #<<
+  aes(x = Sepal.Length, y = Petal.Length) +
+  geom_point()
 ```
 * Pass in the data frame as your first argument
 
@@ -420,9 +422,10 @@ iris %>%  #<<
 # Scatterplots
 
 ```{r message=FALSE, warning=FALSE, paged.print=FALSE, fig.height = 4, fig.width = 4, fig.align = "center", eval=FALSE}
-iris %>%  
+iris %>%
   ggplot() + 
-  geom_point(aes(x = Sepal.Length, y = Petal.Length)) #<<
+  aes(x = Sepal.Length, y = Petal.Length) + #<<
+  geom_point()
 ```
 * Pass in the data frame as your first argument
 * Aesthetics maps the data onto plot characteristics, here x and y axes
@@ -432,9 +435,10 @@ iris %>%
 # Scatterplots
 
 ```{r message=FALSE, warning=FALSE, paged.print=FALSE, fig.height = 4, fig.width = 4, fig.align = "center", eval=FALSE}
-iris %>%  
+iris %>%
   ggplot() + 
-  geom_point(aes(x = Sepal.Length, y = Petal.Length)) #<<
+  aes(x = Sepal.Length, y = Petal.Length) +
+  geom_point() #<<
 ```
 * Pass in the data frame as your first argument
 * Aesthetics maps the data onto plot characteristics, here x and y axes
@@ -447,7 +451,8 @@ iris %>%
 ```{r message=FALSE, warning=FALSE, paged.print=FALSE, fig.height = 5, fig.width = 5, fig.align = "center"}
 iris %>% 
   ggplot() + 
-  geom_point(aes(x = Sepal.Length, y = Petal.Length), color = "red") #<<
+  aes(x = Sepal.Length, y = Petal.Length) +
+  geom_point(color = "red") #<<
 ```
 
 ---
@@ -457,7 +462,8 @@ iris %>%
 ```{r message=FALSE, warning=FALSE, paged.print=FALSE, fig.height = 5, fig.width = 5, fig.align = "center"}
 iris %>% 
   ggplot() + 
-  geom_point(aes(x = Sepal.Length, y = Petal.Length, color = Species)) #<<
+  aes(x = Sepal.Length, y = Petal.Length, color = Species) + #<<
+  geom_point()
 ```
 
 * Placing color inside aesthetic maps it to the data
@@ -469,7 +475,8 @@ iris %>%
 ```{r message=FALSE, warning=FALSE, paged.print=FALSE, fig.height = 5, fig.width = 5, fig.align = "center"}
 iris %>% 
   ggplot() + 
-  geom_point(aes(x = Sepal.Length, y = Petal.Length, shape = Species)) #<<
+  aes(x = Sepal.Length, y = Petal.Length, shape = Species) + #<<
+  geom_point()
 ```
 
 ---
@@ -478,8 +485,9 @@ iris %>%
 
 ```{r message=FALSE, warning=FALSE, paged.print=FALSE, fig.height = 5, fig.width = 5, fig.align = "center"}
 iris %>% 
-  ggplot() + 
-  geom_line(aes(x = Sepal.Length, y = Petal.Length, color = Species)) #<<
+  ggplot() +
+  aes(x = Sepal.Length, y = Petal.Length, color = Species) +
+  geom_line() #<<
 ```
 
 ---
@@ -488,13 +496,13 @@ iris %>%
 
 ```{r message=FALSE, warning=FALSE, paged.print=FALSE, fig.height = 5, fig.width = 5, fig.align = "center"}
 iris %>% 
-  ggplot() + 
-  geom_line(aes(x = Sepal.Length, y = Petal.Length, color = Species)) + 
-  geom_point(aes(x = Sepal.Length, y = Petal.Length)) #<<
+  ggplot() +
+  aes(x = Sepal.Length, y = Petal.Length, color = Species) +
+  geom_line() + 
+  geom_point() #<<
 ```
 
 ---
-
 
 # aes ou pas aes?
 
@@ -513,7 +521,8 @@ knitr::include_graphics("ggplot2_logo.jpg")
 ```{r message=FALSE, warning=FALSE, paged.print=FALSE, fig.height = 5, fig.width = 5, fig.align = "center"}
 iris %>% 
   ggplot() + 
-  geom_histogram(aes(x = Sepal.Length)) #<<
+  aes(x = Sepal.Length) + 
+  geom_histogram() #<<
 ```
 
 ---
@@ -523,7 +532,8 @@ iris %>%
 ```{r message=FALSE, warning=FALSE, paged.print=FALSE, fig.height = 5, fig.width = 5, fig.align = "center"}
 iris %>% 
   ggplot() + 
-  geom_histogram(aes(x = Sepal.Length), fill = "orange") #<<
+  aes(x = Sepal.Length) + 
+  geom_histogram(fill = "orange") #<<
 ```
 
 ---
@@ -533,17 +543,19 @@ iris %>%
 ```{r message=FALSE, warning=FALSE, paged.print=FALSE, fig.height = 5, fig.width = 5, fig.align = "center"}
 iris %>% 
   ggplot() + 
-  geom_histogram(aes(x = Sepal.Length), fill = "orange", color = "brown") #<<
+  aes(x = Sepal.Length) + 
+  geom_histogram(fill = "orange", color = "brown") #<<
 ```
 
 ---
 
 # Histograms, with labels and title
 
-```{r message=FALSE, warning=FALSE, paged.print=FALSE, fig.height = 5, fig.width = 5, fig.align = "center"}
+```{r message=FALSE, warning=FALSE, paged.print=FALSE, fig.height = 4, fig.width = 5, fig.align = "center"}
 iris %>% 
   ggplot() + 
-  geom_histogram(aes(x = Sepal.Length), fill = "orange", color = "brown") + 
+  aes(x = Sepal.Length) + 
+  geom_histogram(fill = "orange", color = "brown") + 
   xlab("Sepal Length") + #<<
   ylab("Count") + #<<
   ggtitle("Histogram of iris sepal lengths") #<<
@@ -556,7 +568,8 @@ iris %>%
 ```{r message=FALSE, warning=FALSE, paged.print=FALSE, fig.height = 4, fig.width = 7, fig.align = "center"}
 iris %>% 
   ggplot() + 
-  geom_histogram(aes(x = Sepal.Length), fill = "orange", color = "brown") + 
+  aes(x = Sepal.Length) + 
+  geom_histogram(fill = "orange", color = "brown") + 
   xlab("Sepal Length") + 
   ylab("Count") + 
   ggtitle("Histogram of iris sepal lengths") + 
@@ -570,7 +583,8 @@ iris %>%
 ```{r message=FALSE, warning=FALSE, paged.print=FALSE, fig.height = 5, fig.width = 5, fig.align = "center"}
 iris %>% 
   ggplot() + 
-  geom_boxplot(aes(x = "", y = Sepal.Length)) #<<
+  aes(x = "", y = Sepal.Length) + 
+  geom_boxplot() #<<
 ```
 
 ---
@@ -580,7 +594,8 @@ iris %>%
 ```{r message=FALSE, warning=FALSE, paged.print=FALSE, fig.height = 5, fig.width = 5, fig.align = "center"}
 iris %>% 
   ggplot() + 
-  geom_boxplot(aes(x = "", y = Sepal.Length), fill = "green") #<<
+  aes(x = "", y = Sepal.Length) + 
+  geom_boxplot(fill = "green") #<<
 ```
 
 ---
@@ -590,7 +605,8 @@ iris %>%
 ```{r message=FALSE, warning=FALSE, paged.print=FALSE, fig.height = 5, fig.width = 5, fig.align = "center"}
 iris %>% 
   ggplot() + 
-  geom_boxplot(aes(x = Species, y = Sepal.Length, fill = Species)) #<<
+  aes(x = Species, y = Sepal.Length, fill = Species) + #<<
+  geom_boxplot() 
 ```
 
 ---
@@ -600,8 +616,11 @@ iris %>%
 ```{r message=FALSE, warning=FALSE, paged.print=FALSE, fig.height = 5, fig.width = 5, fig.align = "center"}
 iris %>% 
   ggplot() + 
-  geom_boxplot(aes(x = Species, y = Sepal.Length, fill = Species)) +
-  scale_fill_manual(values=c("red", "blue", "purple")) #<<
+  aes(x = Species, y = Sepal.Length, fill = Species) +
+  geom_boxplot() +
+  scale_fill_manual( #<<
+    values=c("red", "blue", "purple") #<<
+    ) #<<
 ```
 
 ---
@@ -611,7 +630,8 @@ iris %>%
 ```{r message=FALSE, warning=FALSE, paged.print=FALSE, fig.height = 5, fig.width = 5, fig.align = "center"}
 iris %>% 
   ggplot() + 
-  geom_boxplot(aes(x = Species, y = Sepal.Length, fill = Species)) +
+  aes(x = Species, y = Sepal.Length, fill = Species) + 
+  geom_boxplot() +
   scale_fill_manual(
     values=c("red", "blue", "purple"), 
     name = "Species name", #<<
@@ -625,7 +645,8 @@ iris %>%
 ```{r message=FALSE, warning=FALSE, paged.print=FALSE, fig.height = 5, fig.width = 5, fig.align = "center"}
 iris %>%
   ggplot() + 
-  geom_density(aes(x = Sepal.Length, fill = Species)) #<<
+  aes(x = Sepal.Length, fill = Species) + 
+  geom_density() #<<
 ```
 
 ---
@@ -635,7 +656,8 @@ iris %>%
 ```{r message=FALSE, warning=FALSE, paged.print=FALSE, fig.height = 5, fig.width = 5, fig.align = "center"}
 iris %>%
   ggplot() + 
-  geom_density(aes(x = Sepal.Length, fill = Species), alpha = 0.5) #<<
+  aes(x = Sepal.Length, fill = Species) + 
+  geom_density(alpha = 0.5) #<<
 ```
 
 ---
@@ -645,7 +667,8 @@ iris %>%
 ```{r message=FALSE, warning=FALSE, paged.print=FALSE, fig.height = 5, fig.width = 5, fig.align = "center"}
 iris %>%
   ggplot() + 
-  geom_density(aes(x = Sepal.Length, fill = Species), alpha = 0.5) +
+  aes(x = Sepal.Length, fill = Species) +
+  geom_density(alpha = 0.5) +
   theme_bw() #<<
 ```
 
@@ -656,7 +679,8 @@ iris %>%
 ```{r message=FALSE, warning=FALSE, paged.print=FALSE, fig.height = 5, fig.width = 5, fig.align = "center"}
 iris %>%
   ggplot() + 
-  geom_density(aes(x = Sepal.Length, fill = Species), alpha = 0.5) +
+  aes(x = Sepal.Length, fill = Species) + 
+  geom_density(alpha = 0.5) +
   theme_classic() #<<
 ```
 
@@ -667,7 +691,8 @@ iris %>%
 ```{r message=FALSE, warning=FALSE, paged.print=FALSE, fig.height = 5, fig.width = 5, fig.align = "center"}
 iris %>%
   ggplot() + 
-  geom_density(aes(x = Sepal.Length, fill = Species), alpha = 0.5) +
+  aes(x = Sepal.Length, fill = Species) +
+  geom_density(alpha = 0.5) +
   theme_dark() #<<
 ```
 
