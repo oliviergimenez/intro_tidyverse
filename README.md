@@ -7,7 +7,7 @@ Alternatively, I also provide the pdf (which I built using the awesome `xaringan
 
 This is work in progress. I need to:
 
-* ~~pick a language, French or English~~
+* pick a language, French or English
 
 * find an example in ecology to be used throughout the presentation
 
