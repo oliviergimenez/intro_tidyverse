@@ -5,19 +5,19 @@ author: "Olivier Gimenez"
 date: "2019-01-14 (updated: `r Sys.Date()`)"
 output:
   xaringan::moon_reader:
-    css: ["rutgers_og.css","rutgers-fonts_og.css"]
+    css: ["rutgers-tidyverse.css","rutgers-fonts_og.css"]
     lib_dir: libs
     nature:
       highlightStyle: github
       highlightLines: true
       countIncrementalSlides: false
-# pour convertir html en pdf, 
-# xaringan::decktape("file:///Users/oliviergimenez/Desktop/intro_tidyverse_olivier/tidyverse_ogimenez.html", "tidyog2.pdf", docker = FALSE)
+# to convert html output into pdf, 
+# xaringan::decktape("file://.../filename.html", "filename.pdf", docker = FALSE)
 ---
 
 # **Tidyverse**
 
-- _Tidy_ pour "bien rangé" et _verse_ pour "univers" 
+- **Ordocosme** in `r emo::ji("fr")` with _Tidy_ for "bien rangé" and _verse_ for "univers" 
 
 - A collection of R `r emo::ji("package")` developed by H. Wickham and others at Rstudio
 
@@ -30,12 +30,12 @@ knitr::include_graphics("wickham_president.jpg")
 
 # **Tidyverse**
 
-* "Un modèle d’organisation des données qui vise à faciliter le travail souvent long et fastidieux de nettoyage et de préparation préalable à la mise en oeuvre de méthodes d’analyse" (Julien Barnier).
+* "A framework for managing data that aims at making the cleaning and preparing steps [muuuuuuuch] easier" (Julien Barnier).
 
-* Les principes d’un tidy data sont :
-    - chaque variable est une colonne
-    - chaque observation est une ligne
-    - chaque type d’observation est dans une table différente
+* Main characteristics of a tidy dataset:
+    - each variable is a column
+    - each observation is a raw
+    - each value is in a different cell
     
 ```{r echo=FALSE, out.width = "80%", fig.align="center"}
 knitr::include_graphics("tidydata.png")
@@ -47,41 +47,37 @@ knitr::include_graphics("tidydata.png")
 # **Tidyverse** is a collection of R `r emo::ji("package")`
 
 
-* `ggplot2` - visualisation
+* `ggplot2` - visualising stuff
 
-* `dplyr` - manipulation et synthèse des données
+* `dplyr`, `tidyr` - data manipulation
 
-* `tidyr` - manipulation des données
+* `purrr` - advanced programming
 
-* `purrr` - programmation avancée
+* `readr` - import data
 
-* `readr` - importation de données
+* `tibble` - improved data.frame format
 
-* `tibble` - tableaux de données data.frame améliorés
+* `forcats` - working w/ factors
 
-* `forcats` - variables qualitatives
-
-* `stringr` - chaînes de caractères
+* `stringr` - working w/ chain of characters
 
 ---
 
 # **Tidyverse** is a collection of R `r emo::ji("package")`
 
-* [`ggplot2` - visualisation](https://ggplot2.tidyverse.org/)
+* [`ggplot2` - visualising stuff](https://ggplot2.tidyverse.org/)
 
-* [`dplyr` - manipulation et synthèse des données](https://dplyr.tidyverse.org/)
+* [`dplyr`, `tidyr` - data manipulation](https://dplyr.tidyverse.org/)
 
-* `tidyr` - manipulation des données
+* `purrr` - advanced programming
 
-* `purrr` - programmation avancée
+* [`readr` - import data](https://readr.tidyverse.org/)
 
-* [`readr` - importation de données](https://readr.tidyverse.org/)
+* [`tibble` - improved data.frame format](https://tibble.tidyverse.org/)
 
-* [`tibble` - tableaux de données data.frame améliorés](https://tibble.tidyverse.org/)
+* [`forcats` - working w/ factors](https://forcats.tidyverse.org/)
 
-* `forcats` - variables qualitatives
-
-* `stringr` - chaînes de caractères
+* [`stringr` - working w/ chain of characters](https://stringr.tidyverse.org/)
 
 
 
@@ -117,18 +113,19 @@ library(tidyverse)
 ```
 
 ---
-class: inverse, center, middle
-
-# Import, Tidy, Transform
-
----
 class: middle
 
-# [Case study](https://peerj.com/preprints/3180/) with Shakespeare's word usage
+## Case study: 
+# [Using Twitter to predict citation rates of ecological research](https://peerj.com/preprints/3180/)
 
-```{r, echo=FALSE, out.width = '75%', fig.align="center"}
+```{r, echo=FALSE, out.width = '85%', fig.align="center"}
 knitr::include_graphics("paper_workflow.png")
 ```
+
+---
+class: inverse, center, middle
+
+# Import
 
 
 ---
@@ -140,83 +137,96 @@ knitr::include_graphics("paper_workflow.png")
 * keeps input types as is (no conversion to factor)
 
 * creates `tibbles` instead of `data.frame`
-     - pas de noms de lignes (rownames)
-     - autorisent noms de colonnes avec caractères spéciaux ou nombres
-     - s'affichent plus intelligemment que les data.frames
-     - pas de partial matching sur noms de colonnes
-     - avertissement si on essaie d’accéder à une colonne inexistante
+     - no names to rows
+     - allows column names with special characters
+     - more clever on screen display than w/ data.frames
+     - no partial matching on column names
+     - warning if attempt to access unexisting column
      
-* is damn fast `r emo::ji("racing_car")`
+* is daaaaaamn fast `r emo::ji("racing_car")`
 
 ---
 
 # Import data
 
-**readr::read_csv** function:
-
 ```{r message=FALSE, warning=FALSE, paged.print=FALSE, cache=TRUE}
-shakespeare <- read_csv('https://gist.githubusercontent.com/zross/ab72ba3250a3ee58e4e7/raw/07f1aa98dd4041f3bb0971d1b213a22302d26488/shakespeare.csv') #<<
-shakespeare
-```
-
-
----
-
-# Group by variable to perform operation
-
-**dplyr::group_by** function:
-```{r message=FALSE, warning=FALSE, paged.print=FALSE}
-shakespeare_corpus <- group_by(shakespeare, corpus) #<<
-shakespeare_corpus
+citations_raw <- read_csv('https://raw.githubusercontent.com/oliviergimenez/intro_tidyverse/master/journal.pone.0166570.s001.CSV')
+citations_raw
 ```
 
 ---
+class: inverse, center, middle
 
-# Summarise data by group 
+# Tidy, transform
 
-**dplyr::summarise** function:
+---
+
+# Rename columns
+
 ```{r message=FALSE, warning=FALSE, paged.print=FALSE}
-mean_shakespeare_corpus <- summarise(shakespeare_corpus,avg=mean(word_count)) #<<
-mean_shakespeare_corpus
+citations_temp <- rename(citations_raw,
+       journal = 'Journal identity',
+       impactfactor = '5-year journal impact factor',
+       pubyear = 'Year published',
+       colldate = 'Collection date',
+       pubdate = 'Publication date',
+       nbtweets = 'Number of tweets',
+       woscitations = 'Number of Web of Science citations')
+citations_temp
 ```
+
+---
+
+# Create (or modify) columns
+
+```{r message=FALSE, warning=FALSE, paged.print=FALSE}
+citations <- mutate(citations_temp, journal = as.factor(journal))
+citations
+```
+
+---
+
+# Create (or modify) columns
+
+```{r message=FALSE, warning=FALSE, paged.print=FALSE}
+levels(citations$journal)
+```
+
+---
+class: inverse, center, middle
+
+# Give your code some air
 
 ---
 
 # Cleaner code with "pipe" operator `%>%`
 
 ```{r message=FALSE, warning=FALSE, paged.print=FALSE}
-shakespeare %>% 
-  group_by(corpus) %>% # group by corpus 
-  summarise(avg = mean(word_count)) # compute mean
+citations_raw %>%
+  rename(journal = 'Journal identity',
+       impactfactor = '5-year journal impact factor',
+       pubyear = 'Year published',
+       colldate = 'Collection date',
+       pubdate = 'Publication date',
+       nbtweets = 'Number of tweets',
+       woscitations = 'Number of Web of Science citations') %>%
+  mutate(journal = as.factor(journal))
 ```
 
 ---
 
-# Compare to base R
+# Name object
 
-```{r message=FALSE, warning=FALSE, paged.print=FALSE}
-with(shakespeare, tapply(word_count, corpus, mean))
-```
-
-
----
-
-# Deselect columns
-
-**dplyr::select** function:
-```{r message=FALSE, warning=FALSE, paged.print=FALSE}
-shakespeare %>% 
-  select(-X1, -corpus_date) # deselect columns #<<
-```
-
----
-
-# Select columns
-
-**dplyr::select** function:
-```{r message=FALSE, warning=FALSE, paged.print=FALSE}
-shakespeare %>% 
-  select(word, word_count, corpus) # select columns #<<
+```{r message=FALSE, warning=FALSE, paged.print=FALSE, eval = FALSE}
+citations <- citations_raw %>% #<<
+  rename(journal = 'Journal identity',
+       impactfactor = '5-year journal impact factor',
+       pubyear = 'Year published',
+       colldate = 'Collection date',
+       pubdate = 'Publication date',
+       nbtweets = 'Number of tweets',
+       woscitations = 'Number of Web of Science citations') %>%
+  mutate(journal = as.factor(journal))
 ```
 
 ---
@@ -237,128 +247,245 @@ knitr::include_graphics("logo_pipe.png")
 
 ---
 
-# Create new column
+# Base R from [Lise Vaudor's blog](http://perso.ens-lyon.fr/lise.vaudor/)
 
-**dplyr::mutate** function:
-```{r message=FALSE, warning=FALSE, paged.print=FALSE}
-shakespeare %>%
-  mutate(word = str_to_lower(word)) # convert words to lowercase #<<
+```{r, eval = FALSE}
+white_and_yolk <- crack(egg, add_seasoning)
+omelette_batter <- beat(white_and_yolk)
+omelette_with_chives <- cook(omelette_batter,add_chives)
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE, out.width = "500px", fig.align = "center"}
+knitr::include_graphics("piping_successive.jpg")
 ```
 
 ---
 
-# Count number of words in each corpus
+# Piping from [Lise Vaudor's blog](http://perso.ens-lyon.fr/lise.vaudor/)
+
+```{r, eval = FALSE}
+egg %>% 
+  crack(add_seasoning) %>% 
+  beat() %>% 
+  cook(add_chives) -> omelette_with_chives
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE, out.width = "250px", fig.align = "center"}
+knitr::include_graphics("piping_piped.png")
+```
+
+
+---
+class: inverse, center, middle
+
+# Tidy, transform
+
+
+---
+
+# Select columns
 
 ```{r message=FALSE, warning=FALSE, paged.print=FALSE}
-shakespeare %>%
-  mutate(word = str_to_lower(word)) %>% # convert words to lowercase
-  group_by(word, corpus) %>% # group by word within corpus
-  summarize(n = sum(word_count)) # count #<<
+citations %>% 
+  select(journal, impactfactor, nbtweets)
 ```
+
+---
+
+# Drop columns
+
+```{r message=FALSE, warning=FALSE, paged.print=FALSE}
+citations %>% 
+  select(-Volume, -Issue, -Authors)
+```
+
+
+---
+
+# Split a column in several columns
+
+```{r message=FALSE, warning=FALSE, paged.print=FALSE}
+citations %>%
+  separate(pubdate,c('month','day','year'),'/')
+```
+
+---
+
+# Transform in Date format...
+
+```{r message=FALSE, warning=FALSE, paged.print=FALSE}
+library(lubridate)
+citations %>%
+  mutate(pubdate = mdy(pubdate),
+         colldate = mdy(colldate))
+```
+
+---
+
+# ...for easy manipulation of dates
+
+```{r message=FALSE, warning=FALSE, paged.print=FALSE}
+library(lubridate)
+citations %>%
+  mutate(pubdate = mdy(pubdate),
+         colldate = mdy(colldate),
+         pubyear2 = year(pubdate)) #<<
+
+```
+
+* Check out `?lubridate::lubridate` for more functions
+
+---
+
+# How to join tables together?
+
+<blockquote class="twitter-tweet" data-lang="fr"><p lang="en" dir="ltr">More <a href="https://twitter.com/hashtag/dplyr?src=hash&amp;ref_src=twsrc%5Etfw">#dplyr</a> 🔧 gifs!  It took me a hella long time to wrap my head around the different types of joins when I first started learning them, so here&#39;s a few examples with some excellent mini datasets from <a href="https://twitter.com/hashtag/dplyr?src=hash&amp;ref_src=twsrc%5Etfw">#dplyr</a> designed specifically for this purpose! <a href="https://twitter.com/hashtag/rstats?src=hash&amp;ref_src=twsrc%5Etfw">#rstats</a> <a href="https://twitter.com/hashtag/tidyverse?src=hash&amp;ref_src=twsrc%5Etfw">#tidyverse</a> <a href="https://t.co/G56fWmIZSq">pic.twitter.com/G56fWmIZSq</a></p>&mdash; Nic Crane (@nic_crane) <a href="https://twitter.com/nic_crane/status/1064237554910806016?ref_src=twsrc%5Etfw">18 novembre 2018</a></blockquote>
+<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+<br> <br> <br> <br>
+
+[![Watch the video](dplyr_join.mp4)](dplyr_join.mp4)
+
+---
+class: inverse, center, middle
+
+# Easy character manipulation
+
+---
+
+# Select rows corresponding to papers with more than 3 authors
+
+```{r message=FALSE, warning=FALSE, paged.print=FALSE}
+citations %>% 
+  filter(str_detect(Authors,'et al'))
+```
+
+---
+
+# Select rows corresponding to papers with less than 3 authors
+
+```{r message=FALSE, warning=FALSE, paged.print=FALSE}
+citations %>% 
+  filter(!str_detect(Authors,'et al'))
+```
+
+---
+
+# Select rows corresponding to papers with less than 3 authors in journal with IF < 5
+
+```{r message=FALSE, warning=FALSE, paged.print=FALSE}
+citations %>% 
+  filter(!str_detect(Authors,'et al'), impactfactor < 5)
+```
+
+---
+
+# Convert words to lowercase
+
+```{r message=FALSE, warning=FALSE, paged.print=FALSE}
+citations %>%
+  mutate(authors_lowercase = str_to_lower(Authors)) %>% #<<
+  select(authors_lowercase)
+```
+
+---
+
+# Remove all spaces in journal names
+
+```{r message=FALSE, warning=FALSE, paged.print=FALSE}
+citations %>%
+  mutate(journal = str_remove_all(journal," ")) %>% #<<
+  select(journal) %>%
+  unique() %>%
+  head(5)
+```
+
+
+---
+
+# Explore `r emo::ji("package")` stringr and regular expressions
+
+* Check out the [vignette on stringr](http://127.0.0.1:42857/help/library/stringr/doc/stringr.html) for more examples on character manipulation and pattern matching functions.
+
+* Check out the [vignette on regular expressions](http://127.0.0.1:42857/help/library/stringr/doc/regular-expressions.html) which are a concise and flexible tool for describing patterns in strings.
+
+
+---
+class: inverse, center, middle
+
+# Basic exploratory data analysis
+
+---
+
+# Count
+
+```{r}
+citations %>% count(journal, sort = TRUE)
+```
+
+---
+
+# Count
+
+```{r}
+citations %>%
+  count(journal, pubyear) %>%
+  head()
+```
+
+---
+
+# Group by variable to calculate stats
+
+```{r message=FALSE, warning=FALSE, paged.print=FALSE}
+citations %>%
+  group_by(journal) %>%
+  summarise(avg_tweets = mean(nbtweets)) %>%
+  head(10)
+```
+
 
 ---
 
 # Order stuff
 
-**dplyr::arrange** function:
 ```{r message=FALSE, warning=FALSE, paged.print=FALSE}
-shakespeare %>%
-  mutate(word = str_to_lower(word)) %>% # convert words to lowercase
-  group_by(word, corpus) %>% # group by word within corpus
-  summarize(n = sum(word_count)) %>% # count 
-  arrange(desc(n)) # decreasing order (wo desc for increasing) #<<
+citations %>% 
+  group_by(journal) %>%
+  summarise(avg_tweets = mean(nbtweets)) %>% 
+  arrange(desc(avg_tweets)) %>% # decreasing order (wo desc for increasing) #<<
+  head(10)
+```
+
+
+---
+
+# Group by variables to calculate stats
+
+```{r message=FALSE, warning=FALSE, paged.print=FALSE}
+citations %>% 
+  group_by(journal, pubyear) %>%
+  summarise(avg_tweets_year = mean(nbtweets))
 ```
 
 ---
 
-# Nb of times a word occurs across all corpus
+# There are so many more things to explore
 
-```{r message=FALSE, warning=FALSE, paged.print=FALSE}
-shakespeare %>%
-  mutate(word = str_to_lower(word)) %>% # convert words to lowercase
-  group_by(word) %>% # group by word
-  summarize(n = sum(word_count), 
-            corpus = n_distinct(corpus)) %>% # count #<<
-  arrange(desc(n)) # decreasing order
+* **spread()** and **gather()** from package `tidyr` to reshape tibbles; see [here](http://garrettgman.github.io/tidying/) for exemple 
+
+* **mutate_all()**, **select_if()** and **summarise_at()** or scoped verbs where _scoped_ means that these functions operate only on a selection of variables; see [here](http://www.rebeccabarter.com/blog/2019-01-23_scoped-verbs/) for example
+
+
+```{r echo=FALSE, out.width = "50%", fig.align="center"}
+knitr::include_graphics("01_tidyverse_data_science.png")
 ```
 
----
-
-# Name this processed dataset
-
-```{r message=FALSE, warning=FALSE, paged.print=FALSE}
-shakespeare_processed <- shakespeare %>% #<<
-  mutate(word = str_to_lower(word)) %>% # convert words to lowercase
-  group_by(word) %>% # group by word
-  summarize(n = sum(word_count), 
-            corpus = n_distinct(corpus)) %>% # count
-  arrange(desc(n)) # decreasing order
-shakespeare_processed #<<
-```
-
----
-
-# Get rid of common words
-
-**dplyr::anti_join** function:
-```{r message=FALSE, warning=FALSE, paged.print=FALSE}
-words <- shakespeare_processed %>%
-  group_by(word) %>% # group by word within corpus
-  anti_join(tidytext::stop_words) %>% # returns all rows from #<<
-                                      # shakespeare that do not #<<
-                                      # match the stop words #<<
-  arrange(desc(n))
-words
-```
-
----
-
-# Find words > 4 char not in all corpus
-
-**dplyr::filter** function to select rows:
-```{r message=FALSE, warning=FALSE, paged.print=FALSE}
-words <- words %>% 
-  filter(corpus < 42, nchar(word) > 4) %>% #<<
-  arrange(desc(n))
-words
-```
-
----
-background-image: url(https://github.com/rstudio/hex-stickers/raw/master/SVG/tidyverse.svg?sanitize=true)
-background-size: 100px
-background-position: 90% 3%
-
-# Check out other functions
-
-* **spread()** and **gather()** from package `tidyr` to reshape tibbles
-
-
-* **inner_join()**, **left_join()**, **right_join()**, **full_join()**, **semi_join()** and **anti_join()** from package `dplyr` to join two tibbles together
-
-
-* **year()**, **month()**, etc... from package `lubridate` to manipulate dates
-
-* Feel free to explore other Tidyverse packages, in particular `forcats` and `stringr` 
-
-```{r echo=FALSE, out.width = "100%", fig.align="center"}
-knitr::include_graphics("tidyband.png")
-```
 
 ---
 class: inverse, center, middle
 
 # Visualize
-
-
----
-class: center
-
-# Case study on Fisher's iris dataset
-
-```{r, echo=FALSE, out.width = '65%', fig.align="center"}
-knitr::include_graphics("iris.png")
-```
-
 
 
 ---
@@ -399,9 +526,9 @@ knitr::include_graphics("ggplot2_logo.jpg")
 # Scatterplots
 
 ```{r message=FALSE, warning=FALSE, paged.print=FALSE, fig.height = 5, fig.width = 5, fig.align = "center"}
-iris %>% 
+citations %>% 
   ggplot() + 
-  aes(x = Sepal.Length, y = Petal.Length) +
+  aes(x = nbtweets, y = woscitations) +
   geom_point()
 ```
 
@@ -410,9 +537,9 @@ iris %>%
 # Scatterplots
 
 ```{r message=FALSE, warning=FALSE, paged.print=FALSE, fig.height = 4, fig.width = 4, fig.align = "center", eval=FALSE}
-iris %>%  #<<
+citations %>%  #<<
   ggplot() + #<<
-  aes(x = Sepal.Length, y = Petal.Length) +
+  aes(x = nbtweets, y = woscitations) +
   geom_point()
 ```
 * Pass in the data frame as your first argument
@@ -422,9 +549,9 @@ iris %>%  #<<
 # Scatterplots
 
 ```{r message=FALSE, warning=FALSE, paged.print=FALSE, fig.height = 4, fig.width = 4, fig.align = "center", eval=FALSE}
-iris %>%
+citations %>% 
   ggplot() + 
-  aes(x = Sepal.Length, y = Petal.Length) + #<<
+  aes(x = nbtweets, y = woscitations) + #<<
   geom_point()
 ```
 * Pass in the data frame as your first argument
@@ -435,23 +562,24 @@ iris %>%
 # Scatterplots
 
 ```{r message=FALSE, warning=FALSE, paged.print=FALSE, fig.height = 4, fig.width = 4, fig.align = "center", eval=FALSE}
-iris %>%
+citations %>%
   ggplot() + 
-  aes(x = Sepal.Length, y = Petal.Length) +
+  aes(x = nbtweets, y = woscitations) +
   geom_point() #<<
 ```
 * Pass in the data frame as your first argument
 * Aesthetics maps the data onto plot characteristics, here x and y axes
 * Display the data geometrically as points
 
+
 ---
 
 # Scatterplots, with colors
 
 ```{r message=FALSE, warning=FALSE, paged.print=FALSE, fig.height = 5, fig.width = 5, fig.align = "center"}
-iris %>% 
+citations %>% 
   ggplot() + 
-  aes(x = Sepal.Length, y = Petal.Length) +
+  aes(x = nbtweets, y = woscitations) +
   geom_point(color = "red") #<<
 ```
 
@@ -459,24 +587,38 @@ iris %>%
 
 # Scatterplots, with species-specific colors
 
-```{r message=FALSE, warning=FALSE, paged.print=FALSE, fig.height = 5, fig.width = 5, fig.align = "center"}
-iris %>% 
+```{r message=FALSE, warning=FALSE, paged.print=FALSE, fig.height = 5, fig.width = 8, fig.align = "center"}
+citations %>% 
   ggplot() + 
-  aes(x = Sepal.Length, y = Petal.Length, color = Species) + #<<
+  aes(x = nbtweets, y = woscitations, color = journal) + #<<
   geom_point()
 ```
 
 * Placing color inside aesthetic maps it to the data
 
+
+---
+
+# Pick a few journals 
+
+```{r message=FALSE, warning=FALSE, paged.print=FALSE, fig.height = 5, fig.width = 5, fig.align = "center"}
+citations_ecology <- citations %>%
+  mutate(journal = str_to_lower(journal)) %>% # all journals names lowercase
+  filter(journal %in%
+           c('journal of animal ecology','journal of applied ecology','ecology')) # filter
+citations_ecology
+```
+
+
 ---
 
 # Scatterplots, with species-specific shapes
 
-```{r message=FALSE, warning=FALSE, paged.print=FALSE, fig.height = 5, fig.width = 5, fig.align = "center"}
-iris %>% 
+```{r message=FALSE, warning=FALSE, paged.print=FALSE, fig.height = 5, fig.width = 8, fig.align = "center"}
+citations_ecology %>% 
   ggplot() + 
-  aes(x = Sepal.Length, y = Petal.Length, shape = Species) + #<<
-  geom_point()
+  aes(x = nbtweets, y = woscitations, shape = journal) + #<<
+  geom_point(size=2)
 ```
 
 ---
@@ -484,10 +626,11 @@ iris %>%
 # Scatterplots, lines instead of points
 
 ```{r message=FALSE, warning=FALSE, paged.print=FALSE, fig.height = 5, fig.width = 5, fig.align = "center"}
-iris %>% 
-  ggplot() +
-  aes(x = Sepal.Length, y = Petal.Length, color = Species) +
-  geom_line() #<<
+citations_ecology %>% 
+  ggplot() + 
+  aes(x = nbtweets, y = woscitations) + 
+  geom_line() + #<<
+  scale_x_log10()
 ```
 
 ---
@@ -495,20 +638,35 @@ iris %>%
 # Scatterplots, add points
 
 ```{r message=FALSE, warning=FALSE, paged.print=FALSE, fig.height = 5, fig.width = 5, fig.align = "center"}
-iris %>% 
+citations_ecology %>% 
   ggplot() +
-  aes(x = Sepal.Length, y = Petal.Length, color = Species) +
+  aes(x = nbtweets, y = woscitations) +
   geom_line() + 
-  geom_point() #<<
+  geom_point() + #<<
+  scale_x_log10()
 ```
 
 ---
 
-# aes ou pas aes?
+# Scatterplots, add smoother
 
-* Si on établit un lien entre les valeurs d'une variable et un attribut graphique, on définit un mappage, et on le déclare dans aes(). 
+```{r message=FALSE, warning=FALSE, paged.print=FALSE, fig.height = 5, fig.width = 5, fig.align = "center"}
+citations_ecology %>% 
+  ggplot() +
+  aes(x = nbtweets, y = woscitations) +
+  geom_line() + 
+  geom_point() +
+  geom_smooth() + #<<
+  scale_x_log10()
+```
 
-* Sinon, on modifie l'attribut de la même manière pour tous les points, et on le définit en dehors de la fonction aes(). 
+---
+
+# aes or not aes?
+
+* If we are to establish a link between the values of a variable and a graphical feature, ie a mapping, then we need an aes(). 
+
+* Otherwise, the graphical feature is modified irrespective of the data, then we do not need an aes(). 
 
 ```{r echo=FALSE, out.width = "30%", fig.align="center"}
 knitr::include_graphics("ggplot2_logo.jpg")
@@ -519,9 +677,9 @@ knitr::include_graphics("ggplot2_logo.jpg")
 # Histograms
 
 ```{r message=FALSE, warning=FALSE, paged.print=FALSE, fig.height = 5, fig.width = 5, fig.align = "center"}
-iris %>% 
+citations_ecology %>% 
   ggplot() + 
-  aes(x = Sepal.Length) + 
+  aes(x = nbtweets) + 
   geom_histogram() #<<
 ```
 
@@ -530,9 +688,9 @@ iris %>%
 # Histograms, with colors
 
 ```{r message=FALSE, warning=FALSE, paged.print=FALSE, fig.height = 5, fig.width = 5, fig.align = "center"}
-iris %>% 
+citations_ecology %>% 
   ggplot() + 
-  aes(x = Sepal.Length) + 
+  aes(x = nbtweets) + 
   geom_histogram(fill = "orange") #<<
 ```
 
@@ -541,9 +699,9 @@ iris %>%
 # Histograms, with colors
 
 ```{r message=FALSE, warning=FALSE, paged.print=FALSE, fig.height = 5, fig.width = 5, fig.align = "center"}
-iris %>% 
+citations_ecology %>% 
   ggplot() + 
-  aes(x = Sepal.Length) + 
+  aes(x = nbtweets) + 
   geom_histogram(fill = "orange", color = "brown") #<<
 ```
 
@@ -552,13 +710,13 @@ iris %>%
 # Histograms, with labels and title
 
 ```{r message=FALSE, warning=FALSE, paged.print=FALSE, fig.height = 4, fig.width = 5, fig.align = "center"}
-iris %>% 
+citations_ecology %>% 
   ggplot() + 
-  aes(x = Sepal.Length) + 
+  aes(x = nbtweets) + 
   geom_histogram(fill = "orange", color = "brown") + 
-  xlab("Sepal Length") + #<<
+  xlab("Number of tweets") + #<<
   ylab("Count") + #<<
-  ggtitle("Histogram of iris sepal lengths") #<<
+  ggtitle("Histogram of the number of tweets") #<<
 ```
 
 ---
@@ -566,14 +724,14 @@ iris %>%
 # Histograms, by species
 
 ```{r message=FALSE, warning=FALSE, paged.print=FALSE, fig.height = 4, fig.width = 7, fig.align = "center"}
-iris %>% 
+citations_ecology %>% 
   ggplot() + 
-  aes(x = Sepal.Length) + 
+  aes(x = nbtweets) + 
   geom_histogram(fill = "orange", color = "brown") + 
-  xlab("Sepal Length") + 
-  ylab("Count") + 
-  ggtitle("Histogram of iris sepal lengths") + 
-  facet_wrap(aes(Species)) #<<
+  xlab("Number of tweets") + #<<
+  ylab("Count") + #<<
+  ggtitle("Histogram of the number of tweets") + 
+  facet_wrap(aes(journal)) #<<
 ```
 
 ---
@@ -581,10 +739,11 @@ iris %>%
 # Boxplots
 
 ```{r message=FALSE, warning=FALSE, paged.print=FALSE, fig.height = 5, fig.width = 5, fig.align = "center"}
-iris %>% 
+citations_ecology %>% 
   ggplot() + 
-  aes(x = "", y = Sepal.Length) + 
-  geom_boxplot() #<<
+  aes(x = "", y = nbtweets) + 
+  geom_boxplot() + #<< 
+  scale_y_log10()
 ```
 
 ---
@@ -592,83 +751,118 @@ iris %>%
 # Boxplots with colors
 
 ```{r message=FALSE, warning=FALSE, paged.print=FALSE, fig.height = 5, fig.width = 5, fig.align = "center"}
-iris %>% 
+citations_ecology %>% 
   ggplot() + 
-  aes(x = "", y = Sepal.Length) + 
-  geom_boxplot(fill = "green") #<<
+  aes(x = "", y = nbtweets) + 
+  geom_boxplot(fill = "green") + #<< 
+  scale_y_log10() 
 ```
 
 ---
 
 # Boxplots with colors by species
 
-```{r message=FALSE, warning=FALSE, paged.print=FALSE, fig.height = 5, fig.width = 5, fig.align = "center"}
-iris %>% 
+```{r message=FALSE, warning=FALSE, paged.print=FALSE, fig.height = 5, fig.width = 8, fig.align = "center"}
+citations_ecology %>% 
   ggplot() + 
-  aes(x = Species, y = Sepal.Length, fill = Species) + #<<
-  geom_boxplot() 
+  aes(x = journal, y = nbtweets, fill = journal) + #<<
+  geom_boxplot() +
+  scale_y_log10()
 ```
 
 ---
 
 # Boxplots, user-specified colors by species 
 
-```{r message=FALSE, warning=FALSE, paged.print=FALSE, fig.height = 5, fig.width = 5, fig.align = "center"}
-iris %>% 
+```{r message=FALSE, warning=FALSE, paged.print=FALSE, fig.height = 4, fig.width = 8, fig.align = "center"}
+citations_ecology %>% 
   ggplot() + 
-  aes(x = Species, y = Sepal.Length, fill = Species) +
+  aes(x = journal, y = nbtweets, fill = journal) +
   geom_boxplot() +
+  scale_y_log10() +
   scale_fill_manual( #<<
-    values=c("red", "blue", "purple") #<<
-    ) #<<
+    values=c("red", "blue", "purple")) #<<
 ```
 
 ---
 
 # Boxplots, change legend settings
 
-```{r message=FALSE, warning=FALSE, paged.print=FALSE, fig.height = 5, fig.width = 5, fig.align = "center"}
-iris %>% 
+```{r message=FALSE, warning=FALSE, paged.print=FALSE, fig.height = 4, fig.width = 8, fig.align = "center"}
+citations_ecology %>% 
   ggplot() + 
-  aes(x = Species, y = Sepal.Length, fill = Species) + 
+  aes(x = journal, y = nbtweets, fill = journal) +
   geom_boxplot() +
-  scale_fill_manual(
+  scale_y_log10() +
+  scale_fill_manual( #<<
     values=c("red", "blue", "purple"), 
-    name = "Species name", #<<
-    labels=c("SETOSA", "VIRGINICA", "VERSICOLOR")) #<<
+    name = "Journal name", #<<
+    labels=c("Ecology", "J Animal Ecology", "J Applied Ecology"))#<<
 ```
+
+
+---
+
+# Ugly bar plots
+
+```{r message=FALSE, warning=FALSE, paged.print=FALSE, fig.height = 4, fig.width = 8, fig.align = "center"}
+citations %>%
+  count(journal) %>%
+  ggplot() +
+  aes(x = journal, y = n) +
+  geom_col() #<<
+```
+
+---
+
+# Idem, with factors reordering and flipping
+
+```{r message=FALSE, warning=FALSE, paged.print=FALSE, fig.height = 4, fig.width = 8, fig.align = "center"}
+citations %>% 
+  count(journal) %>%
+  ggplot() + 
+  aes(x = fct_reorder(journal, n), y = n) + #<<
+  geom_col() +
+  coord_flip() #<<
+```
+
+* More about how to (tidy) work with factors [here](https://stat545.com/block029_factors.html) and [here](https://thinkr.fr/forcats-forcats-vous-avez-dit-forcats/).
+
 
 ---
 
 # Density plots
 
-```{r message=FALSE, warning=FALSE, paged.print=FALSE, fig.height = 5, fig.width = 5, fig.align = "center"}
-iris %>%
+```{r message=FALSE, warning=FALSE, paged.print=FALSE, fig.height = 5, fig.width = 8, fig.align = "center"}
+citations_ecology %>% 
   ggplot() + 
-  aes(x = Sepal.Length, fill = Species) + 
-  geom_density() #<<
+  aes(x = nbtweets, fill = journal) + 
+  geom_density() +#<< 
+  scale_x_log10()
 ```
 
 ---
 
 # Density plots, control transparency
 
-```{r message=FALSE, warning=FALSE, paged.print=FALSE, fig.height = 5, fig.width = 5, fig.align = "center"}
-iris %>%
+```{r message=FALSE, warning=FALSE, paged.print=FALSE, fig.height = 5, fig.width = 8, fig.align = "center"}
+citations_ecology %>% 
   ggplot() + 
-  aes(x = Sepal.Length, fill = Species) + 
-  geom_density(alpha = 0.5) #<<
+  aes(x = nbtweets, fill = journal) + 
+  geom_density(alpha = 0.5) +#<< 
+  scale_x_log10()
 ```
 
 ---
 
 # Change default background theme 1/3
 
-```{r message=FALSE, warning=FALSE, paged.print=FALSE, fig.height = 5, fig.width = 5, fig.align = "center"}
-iris %>%
+```{r message=FALSE, warning=FALSE, paged.print=FALSE, fig.height = 5, fig.width = 8, fig.align = "center"}
+citations_ecology %>% 
   ggplot() + 
-  aes(x = Sepal.Length, fill = Species) +
+  aes(x = nbtweets, fill = journal) + 
   geom_density(alpha = 0.5) +
+  scale_x_log10() + 
   theme_bw() #<<
 ```
 
@@ -676,11 +870,12 @@ iris %>%
 
 # Change default background theme 2/3
 
-```{r message=FALSE, warning=FALSE, paged.print=FALSE, fig.height = 5, fig.width = 5, fig.align = "center"}
-iris %>%
+```{r message=FALSE, warning=FALSE, paged.print=FALSE, fig.height = 5, fig.width = 8, fig.align = "center"}
+citations_ecology %>% 
   ggplot() + 
-  aes(x = Sepal.Length, fill = Species) + 
+  aes(x = nbtweets, fill = journal) + 
   geom_density(alpha = 0.5) +
+  scale_x_log10() + 
   theme_classic() #<<
 ```
 
@@ -688,13 +883,34 @@ iris %>%
 
 # Change default background theme 3/3
 
-```{r message=FALSE, warning=FALSE, paged.print=FALSE, fig.height = 5, fig.width = 5, fig.align = "center"}
-iris %>%
+```{r message=FALSE, warning=FALSE, paged.print=FALSE, fig.height = 5, fig.width = 8, fig.align = "center"}
+citations_ecology %>% 
   ggplot() + 
-  aes(x = Sepal.Length, fill = Species) +
+  aes(x = nbtweets, fill = journal) + 
   geom_density(alpha = 0.5) +
+  scale_x_log10() + 
   theme_dark() #<<
 ```
+
+
+---
+
+# More on data visualisation with ggplot2
+
+
+* [Portfolio](https://www.r-graph-gallery.com/portfolio/ggplot2-package/) of ggplot2 plots
+
+
+* [Top](http://r-statistics.co/Top50-Ggplot2-Visualizations-MasterList-R-Code.html) ggplot2 visualizations
+
+
+* [Interactive](https://github.com/dreamRs/esquisse) ggplot2 visualizations
+
+
+```{r echo=FALSE, out.width = "30%", fig.align="center"}
+knitr::include_graphics("ggplot2_logo.jpg")
+```
+
 
 ---
 
@@ -716,40 +932,23 @@ background-position: 50% 50%
    - [Fundamentals of Data visualization](https://serialmentor.com/dataviz/)
    - [Data Visualization: A practical introduction](http://socviz.co/)
    
-   
+  
 * [Tidy Tuesdays videos](https://www.youtube.com/user/safe4democracy/videos) by D. Robinson chief data scientist at DataCamp
 
----
 
-# [Blog Lise Vaudor](http://perso.ens-lyon.fr/lise.vaudor/)
+* Material of the [2-day workshop Data Science in the tidyverse](https://github.com/cwickham/data-science-in-tidyverse) held at the RStudio 2019 conference
 
-## Base R
 
-```{r, eval = FALSE}
-white_and_yolk <- crack(egg, add_seasoning)
-omelette_batter <- beat(white_and_yolk)
-omelette_with_chives <- cook(omelette_batter,add_chives)
-```
+* Material of the stat545 course on [Data wrangling, exploration, and analysis with R](http://stat545.com/topics.html) at the University of British Columbia
 
-```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE, out.width = "400px", fig.align = "center"}
-knitr::include_graphics("piping_successive.jpg")
-```
+* List of best R packages (with their description) on [data import, wrangling and visualization](https://www.computerworld.com/article/2921176/business-intelligence/great-r-packages-for-data-import-wrangling-visualization.html)
 
 ---
 
-# [Blog Lise Vaudor](http://perso.ens-lyon.fr/lise.vaudor/)
+# [How to switch from base R to tidyverse?](https://www.significantdigits.org/2017/10/switching-from-base-r-to-tidyverse/)
 
-## Piping
-
-```{r, eval = FALSE}
-egg %>% 
-  crack(add_seasoning) %>% 
-  beat() %>% 
-  cook(add_chives) -> omelette_with_chives
-```
-
-```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE, out.width = "200px", fig.align = "center"}
-knitr::include_graphics("piping_piped.png")
+```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE, out.width = "800px", fig.align = "center"}
+knitr::include_graphics("switch_baseR_tidyverse.png")
 ```
 
 ---
