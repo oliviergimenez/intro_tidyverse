@@ -3,7 +3,7 @@
 In this repo, you will find all you need to reproduce the slides of my introduction to the tidyverse. 
 Clone or download the repo, then just open the Rmd file and Knit it :smiley:
 
-Alternatively, I also provide the html and the pdf (which I built using the awesome `xaringan::decktape()` function).
+Alternatively, I also provide the html and [the pdf](https://github.com/oliviergimenez/intro_tidyverse/blob/master/tidyogv2.pdf) (which I built using the awesome `xaringan::decktape()` function).
 
 The first version of the slides was released on Jan 16, 2019 was substantially updated on Jan 24, 2019.
 
