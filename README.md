@@ -1,13 +1,13 @@
 # Introduction to the dityverse
 
 In this repo, you will find all you need to reproduce the slides of my introduction to the tidyverse. 
-Just open the Rmd file and Knit it :smiley:
+Clone or download the repo, then just open the Rmd file and Knit it :smiley:
 
 Alternatively, I also provide the html and the pdf (which I built using the awesome `xaringan::decktape()` function).
 
-The first version I released on Jan 16, 2019 was substantially updated on Jan 24, 2019.
+The first version of the slides was released on Jan 16, 2019 was substantially updated on Jan 24, 2019.
 
-When I find the time, I will revise the slides and: 
+When I find the time, I will: 
 
 * Use a [better presentation]( https://www.garrickadenbuie.com/blog/2018/08/16/decouple-code-and-output-in-xaringan-slides/ ) of code and plots
 
