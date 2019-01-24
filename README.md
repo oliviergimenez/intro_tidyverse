@@ -1,4 +1,4 @@
-# Introduction to the dityverse
+# Introduction to the tidyverse
 
 In this repo, you will find all you need to reproduce the slides of my introduction to the tidyverse. 
 Clone or download the repo, then just open the Rmd file and Knit it :smiley:
